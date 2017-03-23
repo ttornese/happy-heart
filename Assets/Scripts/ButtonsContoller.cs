@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class ButtonsContoller : MonoBehaviour {
     public GameObject pauseMenu;
+	public GameObject gameOverMenu;
 
     public void StartGame()
     {
@@ -26,5 +27,11 @@ public class ButtonsContoller : MonoBehaviour {
     {
         Application.Quit();
     }
+
+	public void RestartGame()
+	{
+		gameOverMenu.SetActive (false);
+        SceneManager.LoadScene("Game");
+	}
 }
 

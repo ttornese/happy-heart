@@ -1,5 +1,4 @@
-﻿
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -23,6 +22,7 @@ public class PlayerController : MonoBehaviour {
     public Text deathText;
     public GameObject healthUI;
     public GameObject pauseMenu;
+	public GameObject gameOverMenu;
 
 
     // Reference to the clones created each time a player shoots a bullet
@@ -196,10 +196,10 @@ public class PlayerController : MonoBehaviour {
      */
     void CheckState()
     {
-        if (health == 0)
+        if (health <= 0)
         {
+    		gameOverMenu.SetActive (true);
             Time.timeScale = 0;
-            deathText.text = "YOU DIED.\nPress 'R' to restart.";
         }
         else if (score == 20)
         {
