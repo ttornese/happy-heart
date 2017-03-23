@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 /**
  * Controller script for the Player. This script contains logic to handle
- * user input, the health of the Player, the Player's current score, and
+ * user input, the health of the Player, and
  * the UI text related to the state of the Player. The script also contains
  * logic to generate 'bullets' that the player character can shoot at
  * enemies.
@@ -14,12 +14,6 @@ using UnityEngine.SceneManagement;
 public class PlayerController : MonoBehaviour {
     // Reference to the bullet GameObject
     public GameObject bullet;
-    // Reference to the score text
-    public Text scoreText;
-    // Reference to the text for a win state
-    public Text winText;
-    // Reference to the text for a death state
-    public Text deathText;
     public GameObject healthUI;
     public GameObject pauseMenu;
 	public GameObject gameOverMenu;
@@ -29,8 +23,6 @@ public class PlayerController : MonoBehaviour {
 	private GameObject bulletClone;
     // Variable to represent the health of the player. Max/Initial value is 4.
     private int health;
-    // Variable to represent the score of the player. Max value is 10.
-    private int score;
     // A coroutine that controls the scale of the Player
     private IEnumerator coroutine;
     // A boolean to keep track of whether or not the heart should pulse
@@ -46,38 +38,26 @@ public class PlayerController : MonoBehaviour {
 	// Time stamp for the last time a player shot a bullet. Controls rate of fire
 	private float lastShot;
 
-    /**
-     * Sets up the initial state of the Player. This includes setting health to
-     * 4, the score to 0, the win and death text to empty strings, and the
-     * score text to 'Score: 0';
-     */
 	void Start () {
 		rigidBody = GetComponent<Rigidbody2D> ();
         // Ensure that the game runs properly when resetting after winning or dying
         Time.timeScale = 1;
         health = 4;
-        score = 0;
-        winText.text = "";
-        deathText.text = "";
         pulsed = false;
         coroutine = HeartBeat(1.0f);
         StartCoroutine(coroutine);
 		fireRate = 0.5f;
 		lastShot = 0.0f;
-        healthUI.GetComponent<HealthDisplayController>().DisplayHealth(health);
+        //healthUI.GetComponent<HealthDisplayController>().DisplayHealth(health);
         pauseMenu.active = false;
-
-        SetScoreText();
 	}
 	
     /**
-     * Update contains the logic for reading user input, correctly setting
-     * the Player's score, and checking if the Player has won the game or
-     * died. Each of these features have been separated into their own
-     * functions.
+     * Update contains the logic for reading user input and checking if
+     * the Player has won the game or died. Each of these features have
+     * been separated into their own functions.
      */
 	void Update () {
-        SetScoreText();
         CheckState();
 	}
 
@@ -92,12 +72,28 @@ public class PlayerController : MonoBehaviour {
         {
             Destroy(other.gameObject);
             health = health - 1;
-            healthUI.GetComponent<HealthDisplayController>().DisplayHealth(health);
+            //healthUI.GetComponent<HealthDisplayController>().DisplayHealth(health);
         }
 		else if (other.gameObject.CompareTag ("Wall"))
 		{
 			rigidBody.velocity = Vector2.zero;
 		}
+        else if (other.gameObject.CompareTag ("Door"))
+        {
+            DoorController dc = other.gameObject.GetComponent<DoorController>();
+            dc.TeleportPlayerToOtherDoor();
+            dc.FlipDoor(true);
+        }
+    }
+
+    void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.gameObject.CompareTag("Door"))
+        {
+            Debug.Log("hi");
+            DoorController dc = other.gameObject.GetComponent<DoorController>();
+            dc.FlipDoor(false);
+        }
     }
 
     /**
@@ -112,7 +108,7 @@ public class PlayerController : MonoBehaviour {
          * The input for shooting bullets will only be read when a user
          * hasn't died or won the game.
          */
-        if (health > 0 && score < 20)
+        if (health > 0)
         {
 			Vector3 position = this.transform.position;
 			if (Input.GetKey(KeyCode.RightArrow))
@@ -192,7 +188,7 @@ public class PlayerController : MonoBehaviour {
     /**
      * Checks the state of the game. The two conditions being checked for
      * are a death state or a win state. If health = 0, the player is in
-     * the death state. If score = 20, the player has entered a win state.
+     * the death state.
      */
     void CheckState()
     {
@@ -201,19 +197,6 @@ public class PlayerController : MonoBehaviour {
     		gameOverMenu.SetActive (true);
             Time.timeScale = 0;
         }
-        else if (score == 20)
-        {
-            Time.timeScale = 0;
-            winText.text = "YOU WIN.\nPress 'R' to restart.";
-        }
-    }
-
-    /**
-     * Sets a Text object to the correct value for the score.
-     */
-    void SetScoreText()
-    {
-        scoreText.text = "Score: " + score.ToString();
     }
 
     /**
@@ -246,15 +229,5 @@ public class PlayerController : MonoBehaviour {
     public int GetHealth()
     {
         return health;
-    }
-
-    /**
-     * Adds 1 to the score for this Player. This is called in the
-     * BulletController whenever a Player bullet collides with an
-     * enemy bullet.
-     */
-    public void incrementScore()
-    {
-        score += 1;
     }
 }

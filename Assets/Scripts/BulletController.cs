@@ -30,7 +30,6 @@ public class BulletController : MonoBehaviour {
         {
 			other.GetComponent<EnemyController> ().DecrementHealth ();
             Destroy(this.gameObject);
-            player.GetComponent<PlayerController>().incrementScore();
         }
     }
 }

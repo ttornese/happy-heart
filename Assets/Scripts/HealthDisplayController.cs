@@ -5,12 +5,14 @@ using UnityEngine.UI;
 
 public class HealthDisplayController : MonoBehaviour
 {
+    public GameObject player;
     public Sprite healthSprite;
 
     private List<GameObject> hearts = new List<GameObject>();
 
-    public void DisplayHealth(int health)
+    public void Update()
     {
+        int health = player.GetComponent<PlayerController>().GetHealth();
         int i = 0;
 
         while (hearts.Count > 0)
