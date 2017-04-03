@@ -37,6 +37,7 @@ public class PlayerController : MonoBehaviour {
 	private float fireRate;
 	// Time stamp for the last time a player shot a bullet. Controls rate of fire
 	private float lastShot;
+    private int keyCount;
 
 	void Start () {
 		rigidBody = GetComponent<Rigidbody2D> ();
@@ -48,6 +49,7 @@ public class PlayerController : MonoBehaviour {
         StartCoroutine(coroutine);
 		fireRate = 0.5f;
 		lastShot = 0.0f;
+        keyCount = 0;
         //healthUI.GetComponent<HealthDisplayController>().DisplayHealth(health);
         pauseMenu.active = false;
 	}
@@ -80,19 +82,28 @@ public class PlayerController : MonoBehaviour {
 		}
         else if (other.gameObject.CompareTag ("Door"))
         {
-            DoorController dc = other.gameObject.GetComponent<DoorController>();
-            dc.TeleportPlayerToOtherDoor();
-            dc.FlipDoor(true);
+            other.gameObject.GetComponentInParent<RoomController> ().setAsCurrentRoom ();
+            //DoorController dc = other.gameObject.GetComponent<DoorController>();
+            //dc.TeleportPlayerToOtherDoor();
+            //dc.FlipDoor(true);
+        }
+        else if (other.gameObject.CompareTag ("Room Key"))
+        {
+            Destroy(other.gameObject);
+            AddKey();
         }
     }
 
-    void OnTriggerExit2D(Collider2D other)
+    void OnCollisionEnter2D(Collision2D other)
     {
-        if (other.gameObject.CompareTag("Door"))
+        if (other.gameObject.CompareTag ("Locked Door"))
         {
-            Debug.Log("hi");
-            DoorController dc = other.gameObject.GetComponent<DoorController>();
-            dc.FlipDoor(false);
+            Debug.Log("hey");
+            if (keyCount > 0)
+            {
+                Destroy(other.gameObject);
+                RemoveKey();
+            }
         }
     }
 
@@ -143,19 +154,19 @@ public class PlayerController : MonoBehaviour {
 
 		if (Input.GetKey (KeyCode.W))
 		{
-			y = 3;
+			y = 4;
 		}
 		if (Input.GetKey (KeyCode.A))
 		{
-			x = -3;
+			x = -4;
 		}
 		if (Input.GetKey (KeyCode.S))
 		{
-			y = -3;
+			y = -4;
 		}
 		if (Input.GetKey (KeyCode.D))
 		{
-			x = 3;
+			x = 4;
 		}
         if(Input.GetKey (KeyCode.Escape))
         {
@@ -218,6 +229,16 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
+    void AddKey()
+    {
+        keyCount += 1;
+    }
+
+    void RemoveKey()
+    {
+        keyCount -= 1;
+    }
+
     // **** PUBLIC FUNCTIONS ****
 
     /**
@@ -229,5 +250,10 @@ public class PlayerController : MonoBehaviour {
     public int GetHealth()
     {
         return health;
+    }
+
+    public int GetKeyCount()
+    {
+        return keyCount;
     }
 }
