@@ -38,6 +38,7 @@ public class PlayerController : MonoBehaviour {
 	// Time stamp for the last time a player shot a bullet. Controls rate of fire
 	private float lastShot;
     private int keyCount;
+    private GameObject healthBar;
 
 	void Start () {
 		rigidBody = GetComponent<Rigidbody2D> ();
@@ -50,7 +51,9 @@ public class PlayerController : MonoBehaviour {
 		fireRate = 0.5f;
 		lastShot = 0.0f;
         keyCount = 0;
-        //healthUI.GetComponent<HealthDisplayController>().DisplayHealth(health);
+
+        healthBar = GameObject.Find("/Canvas/Health Bar");
+        healthBar.GetComponent<HealthDisplayController>().DisplayHealth();
         pauseMenu.active = false;
 	}
 	
@@ -74,7 +77,7 @@ public class PlayerController : MonoBehaviour {
         {
             Destroy(other.gameObject);
             health = health - 1;
-            //healthUI.GetComponent<HealthDisplayController>().DisplayHealth(health);
+            healthBar.GetComponent<HealthDisplayController>().DisplayHealth();
         }
 		else if (other.gameObject.CompareTag ("Wall"))
 		{
@@ -83,9 +86,6 @@ public class PlayerController : MonoBehaviour {
         else if (other.gameObject.CompareTag ("Door"))
         {
             other.gameObject.GetComponentInParent<RoomController> ().setAsCurrentRoom ();
-            //DoorController dc = other.gameObject.GetComponent<DoorController>();
-            //dc.TeleportPlayerToOtherDoor();
-            //dc.FlipDoor(true);
         }
         else if (other.gameObject.CompareTag ("Room Key"))
         {

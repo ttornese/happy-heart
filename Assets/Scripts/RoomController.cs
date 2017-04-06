@@ -7,11 +7,14 @@ public class RoomController : MonoBehaviour {
     public List<GameObject> neighbors;
 
     private GameObject camera;
+    private GameObject enemies;
     private bool occupied;
 
 	void Start () {
         camera = GameObject.Find("/Camera");
         occupied = isSpawnRoom;
+        enemies = GameObject.Find(gameObject.name + "/Enemies");
+        enemies.SetActive(false);
 	}
 	
 	// Update is called once per frame
@@ -22,6 +25,7 @@ public class RoomController : MonoBehaviour {
     void setAsUnoccupied()
     {
         occupied = false;
+        enemies.SetActive(false);
     }
 
     public void setAsCurrentRoom()
@@ -33,6 +37,7 @@ public class RoomController : MonoBehaviour {
             neighbor.GetComponent<RoomController> ().setAsUnoccupied ();
         }
 
+        enemies.SetActive(true);
         camera.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, -1);
     }
 }

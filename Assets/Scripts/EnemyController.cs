@@ -7,11 +7,11 @@ using UnityEngine;
  * and shoot bullets out in four directions on a cycle.
  */
 public class EnemyController : MonoBehaviour {
-	// Reference to the player
-	public GameObject player;
 	// Reference to Enemy Bullet prefab
 	public GameObject enemyBullet;
 
+	// Reference to the player
+	private GameObject player;
 	// Reference to RigidBody2D component on this Enemy
 	private Rigidbody2D rigidBody;
 	private int health;
@@ -27,6 +27,7 @@ public class EnemyController : MonoBehaviour {
 
 	void Start ()
 	{
+        player = GameObject.Find("/Player");
 		rigidBody = this.GetComponent<Rigidbody2D> ();
 		health = 2;
 		fireRate = 3.0f;
@@ -71,19 +72,19 @@ public class EnemyController : MonoBehaviour {
 	{
 		if (Time.time > fireRate + lastShot)
 		{
-			upBullet = Instantiate (enemyBullet, this.transform.position, Quaternion.identity);
+			upBullet = Instantiate (enemyBullet, gameObject.transform.position, Quaternion.identity);
 			upBullet.GetComponent<Rigidbody2D> ().velocity = new Vector2(0.0f, 1.0f);
 			upBullet.GetComponent<SpriteRenderer> ().enabled = true;
 
-			downBullet = Instantiate (enemyBullet, this.transform.position, Quaternion.identity);
+            downBullet = Instantiate (enemyBullet, gameObject.transform.position, Quaternion.identity);
 			downBullet.GetComponent<Rigidbody2D> ().velocity = new Vector2(0.0f, -1.0f);
 			downBullet.GetComponent<SpriteRenderer> ().enabled = true;
 
-			leftBullet = Instantiate (enemyBullet, this.transform.position, Quaternion.identity);
+			leftBullet = Instantiate (enemyBullet, gameObject.transform.position, Quaternion.identity);
 			leftBullet.GetComponent<Rigidbody2D> ().velocity = new Vector2(-1.0f, 0.0f);
 			leftBullet.GetComponent<SpriteRenderer> ().enabled = true;
 
-			rightBullet = Instantiate (enemyBullet, this.transform.position, Quaternion.identity);
+			rightBullet = Instantiate (enemyBullet, gameObject.transform.position, Quaternion.identity);
 			rightBullet.GetComponent<Rigidbody2D> ().velocity = new Vector2(1.0f, 0.0f);
 			rightBullet.GetComponent<SpriteRenderer> ().enabled = true;
 

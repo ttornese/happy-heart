@@ -23,13 +23,13 @@ public class BulletController : MonoBehaviour {
     {
         if (other.gameObject.CompareTag("Wall"))
         {
-            Destroy(this.gameObject);
+            Destroy(gameObject);
         }
 
         if (other.gameObject.CompareTag("Enemy"))
         {
 			other.GetComponent<EnemyController> ().DecrementHealth ();
-            Destroy(this.gameObject);
+            Destroy(gameObject);
         }
     }
 }
