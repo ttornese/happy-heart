@@ -21,18 +21,21 @@ public class TurretEnemy: MonoBehaviour {
 	// Refrences to bullet clones that are created each time
 	// this Enemy shoots
 	private GameObject bulletClone;
+    private int speed;
 
 	void Start ()
 	{
         player = GameObject.Find("/Player");
 		rigidBody = this.GetComponent<Rigidbody2D> ();
 		health = 2;
-		fireRate = 3.0f;
+        fireRate = Random.Range(2.5f, 4.0f);
+        speed = 3;
 		lastShot = 0.0f;
 	}
 
 	void Update () {
 		ShootBullets ();
+        DestroyIfAlive ();
 	}
 
 	/**
@@ -47,21 +50,22 @@ public class TurretEnemy: MonoBehaviour {
 		Vector2 enemyPosition = gameObject.transform.position;
 		float velocityX = 1.0f, velocityY = 1.0f;
 
-		if (enemyPosition.x > playerPosition.x) {
-			velocityX = -1.0f;
-		}
 
-		if (enemyPosition.y > playerPosition.y)
-		{
-			velocityY = -1.0f;
-		}
+        bulletClone = Instantiate(enemyBullet, gameObject.transform.position, Quaternion.identity);
+        bulletClone.GetComponent<Rigidbody2D> ().velocity = (player.transform.position - gameObject.transform.position).normalized * speed;
+            bulletClone.GetComponent<SpriteRenderer> ().enabled = true;
 
-			bulletClone = Instantiate (enemyBullet, gameObject.transform.forward + gameObject.transform.position, Quaternion.identity);
-			bulletClone.GetComponent<SpriteRenderer> ().enabled = true;
-
-			lastShot = Time.time;
+		lastShot = Time.time;
 		}
 	}
+
+    void DestroyIfAlive()
+    {
+        if (health == 0)
+        {
+            Destroy(gameObject);
+        }
+    }
 
 	// *** PUBLIC FUNCTIONS ***
 	/**

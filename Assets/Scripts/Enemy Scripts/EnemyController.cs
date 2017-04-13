@@ -37,6 +37,7 @@ public class EnemyController : MonoBehaviour {
 	void Update () {
 		FollowPlayer ();
 		ShootBullets ();
+        DestroyIfAlive ();
 	}
 
 	/**
@@ -58,10 +59,6 @@ public class EnemyController : MonoBehaviour {
 		}
 		rigidBody.velocity = new Vector2 (velocityX, velocityY);
 
-		if (health == 0)
-		{
-			Destroy (this.gameObject);
-		}
 	}
 
 	/**
@@ -91,6 +88,14 @@ public class EnemyController : MonoBehaviour {
 			lastShot = Time.time;
 		}
 	}
+
+    void DestroyIfAlive()
+    {
+        if (health == 0)
+        {
+            Destroy(this.gameObject);
+        }
+    }
 
 	// *** PUBLIC FUNCTIONS ***
 	/**

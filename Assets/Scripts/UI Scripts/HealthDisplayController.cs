@@ -36,7 +36,7 @@ public class HealthDisplayController : MonoBehaviour
           img.sprite = healthSprite;
           RectTransform rt = heart.GetComponent<RectTransform>();
           rt.sizeDelta = new Vector2(2, 2);
-          rt.localPosition = new Vector3(-325 + 50 * i, 295, 0);
+          rt.localPosition = new Vector3(275 + 100 * i, 130, 0);
           rt.pivot = new Vector2(1, 1);
           hearts.Add(heart);
         }

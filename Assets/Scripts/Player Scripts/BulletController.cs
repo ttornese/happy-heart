@@ -26,6 +26,12 @@ public class BulletController : MonoBehaviour {
             Destroy(gameObject);
         }
 
+        if (other.gameObject.CompareTag("Turret"))
+        {
+			other.GetComponent<TurretEnemy> ().DecrementHealth ();
+            Destroy(gameObject);
+        }
+
         if (other.gameObject.CompareTag("Enemy"))
         {
 			other.GetComponent<EnemyController> ().DecrementHealth ();

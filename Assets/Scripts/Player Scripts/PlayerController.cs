@@ -15,8 +15,8 @@ public class PlayerController : MonoBehaviour {
     // Reference to the bullet GameObject
     public GameObject bullet;
     public GameObject healthUI;
-    public GameObject pauseMenu;
-	public GameObject gameOverMenu;
+    private GameObject pauseMenu;
+	private GameObject gameOverMenu;
 
 
     // Reference to the clones created each time a player shoots a bullet
@@ -54,7 +54,10 @@ public class PlayerController : MonoBehaviour {
 
         healthBar = GameObject.Find("/Canvas/Health Bar");
         healthBar.GetComponent<HealthDisplayController>().DisplayHealth();
-        pauseMenu.active = false;
+        pauseMenu = GameObject.Find("/Canvas/Pause Menu/");
+        gameOverMenu = GameObject.Find("/Canvas/Game Over Menu");
+        pauseMenu.SetActive(false);
+        gameOverMenu.SetActive(false);
 	}
 	
     /**
@@ -98,7 +101,6 @@ public class PlayerController : MonoBehaviour {
     {
         if (other.gameObject.CompareTag ("Locked Door"))
         {
-            Debug.Log("hey");
             if (keyCount > 0)
             {
                 Destroy(other.gameObject);
