@@ -12,8 +12,6 @@ public class TurretEnemy: MonoBehaviour {
 
 	// Reference to the player
 	private GameObject player;
-	// Reference to RigidBody2D component on this Enemy
-	private Rigidbody2D rigidBody;
 	private int health;
 	// Controls the rate at which the enemy shoots bullets
 	private float fireRate;
@@ -26,7 +24,6 @@ public class TurretEnemy: MonoBehaviour {
 	void Start ()
 	{
         player = GameObject.Find("/Player");
-		rigidBody = this.GetComponent<Rigidbody2D> ();
 		health = 2;
         fireRate = Random.Range(2.5f, 4.0f);
         speed = 3;
@@ -48,12 +45,16 @@ public class TurretEnemy: MonoBehaviour {
 		{
 		Vector2 playerPosition = player.transform.position;
 		Vector2 enemyPosition = gameObject.transform.position;
-		float velocityX = 1.0f, velocityY = 1.0f;
 
 
-        bulletClone = Instantiate(enemyBullet, gameObject.transform.position, Quaternion.identity);
+		bulletClone = Instantiate(
+				enemyBullet,
+				gameObject.transform.position,
+				Quaternion.identity,
+				gameObject.transform
+		);
         bulletClone.GetComponent<Rigidbody2D> ().velocity = (player.transform.position - gameObject.transform.position).normalized * speed;
-            bulletClone.GetComponent<SpriteRenderer> ().enabled = true;
+        bulletClone.GetComponent<SpriteRenderer> ().enabled = true;
 
 		lastShot = Time.time;
 		}

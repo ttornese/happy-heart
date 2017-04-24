@@ -26,6 +26,16 @@ public class RoomController : MonoBehaviour {
     {
         occupied = false;
         enemies.SetActive(false);
+
+		GameObject[] bullets = GameObject.FindGameObjectsWithTag ("Enemy Bullet");
+
+		for (int i = 0; i < bullets.Length; i++)
+		{
+			if (bullets [i].name == "Enemy Bullet(Clone)")
+			{
+				Destroy (bullets [i]);
+			}
+		}
     }
 
     public void setAsCurrentRoom()

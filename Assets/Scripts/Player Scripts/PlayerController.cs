@@ -14,10 +14,9 @@ using UnityEngine.SceneManagement;
 public class PlayerController : MonoBehaviour {
     // Reference to the bullet GameObject
     public GameObject bullet;
-    public GameObject healthUI;
     private GameObject pauseMenu;
 	private GameObject gameOverMenu;
-
+	private GameObject bossKeyDisplay;
 
     // Reference to the clones created each time a player shoots a bullet
 	private GameObject bulletClone;
@@ -39,6 +38,7 @@ public class PlayerController : MonoBehaviour {
 	private float lastShot;
     private int keyCount;
     private GameObject healthBar;
+	public bool hasBossKey;
 
 	void Start () {
 		rigidBody = GetComponent<Rigidbody2D> ();
@@ -56,8 +56,12 @@ public class PlayerController : MonoBehaviour {
         healthBar.GetComponent<HealthDisplayController>().DisplayHealth();
         pauseMenu = GameObject.Find("/Canvas/Pause Menu/");
         gameOverMenu = GameObject.Find("/Canvas/Game Over Menu");
+		bossKeyDisplay = GameObject.Find ("/Canvas/Boss Key Display");
+		bossKeyDisplay.GetComponent<BossKeyDisplayController> ().SetMarkSprite ();
         pauseMenu.SetActive(false);
         gameOverMenu.SetActive(false);
+
+		hasBossKey = false;
 	}
 	
     /**
@@ -76,37 +80,55 @@ public class PlayerController : MonoBehaviour {
      */
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.CompareTag("Enemy Bullet"))
-        {
-            Destroy(other.gameObject);
-            health = health - 1;
-            healthBar.GetComponent<HealthDisplayController>().DisplayHealth();
-        }
-		else if (other.gameObject.CompareTag ("Wall"))
+		switch (other.gameObject.tag)
 		{
-			rigidBody.velocity = Vector2.zero;
+		    case "Enemy Bullet":
+			    Destroy (other.gameObject);
+			    health = health - 1;
+			    healthBar.GetComponent<HealthDisplayController> ().DisplayHealth ();
+		    	break;
+		    case "Wall":
+			    rigidBody.velocity = Vector2.zero;
+			    break;
+		    case "Door":
+			    other.gameObject.GetComponentInParent<RoomController> ().setAsCurrentRoom ();
+			    break;
+		    case "Room Key":
+			    Destroy (other.gameObject);
+			    AddKey ();
+			    break;
+		    case "Heart Container":
+			    Destroy (other.gameObject);
+			    IncrementHealth ();
+			    healthBar.GetComponent<HealthDisplayController> ().DisplayHealth ();
+			    break;
+		    case "Boss Key":
+			    Destroy (other.gameObject);
+			    hasBossKey = true;
+			    bossKeyDisplay.GetComponent<BossKeyDisplayController> ().SetMarkSprite ();
+			    break;
 		}
-        else if (other.gameObject.CompareTag ("Door"))
-        {
-            other.gameObject.GetComponentInParent<RoomController> ().setAsCurrentRoom ();
-        }
-        else if (other.gameObject.CompareTag ("Room Key"))
-        {
-            Destroy(other.gameObject);
-            AddKey();
-        }
     }
 
     void OnCollisionEnter2D(Collision2D other)
     {
-        if (other.gameObject.CompareTag ("Locked Door"))
-        {
-            if (keyCount > 0)
-            {
-                Destroy(other.gameObject);
-                RemoveKey();
-            }
-        }
+		if (other.gameObject.CompareTag ("Locked Door"))
+		{
+			if (keyCount > 0)
+			{
+				Destroy (other.gameObject);
+				RemoveKey ();
+			}
+		}
+		else if (other.gameObject.CompareTag ("Boss Door"))
+		{
+			if (hasBossKey)
+			{
+				Destroy (other.gameObject);
+				hasBossKey = false;
+				bossKeyDisplay.GetComponent<BossKeyDisplayController> ().SetMarkSprite ();
+			}
+		}
     }
 
     /**
@@ -258,4 +280,9 @@ public class PlayerController : MonoBehaviour {
     {
         return keyCount;
     }
+
+	public void IncrementHealth()
+	{
+		health += 1;
+	}
 }

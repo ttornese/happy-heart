@@ -69,21 +69,41 @@ public class EnemyController : MonoBehaviour {
 	{
 		if (Time.time > fireRate + lastShot)
 		{
-			upBullet = Instantiate (enemyBullet, gameObject.transform.position, Quaternion.identity);
-			upBullet.GetComponent<Rigidbody2D> ().velocity = new Vector2(0.0f, 1.0f);
+			upBullet = Instantiate (
+				enemyBullet,
+				gameObject.transform.position,
+				Quaternion.identity
+			);
+			upBullet.GetComponent<Rigidbody2D> ().velocity = Vector3.up;
 			upBullet.GetComponent<SpriteRenderer> ().enabled = true;
+			upBullet.transform.SetParent(gameObject.transform.parent.parent.transform);
 
-            downBullet = Instantiate (enemyBullet, gameObject.transform.position, Quaternion.identity);
+            downBullet = Instantiate (
+				enemyBullet,
+				gameObject.transform.position,
+				Quaternion.identity
+			);
 			downBullet.GetComponent<Rigidbody2D> ().velocity = new Vector2(0.0f, -1.0f);
 			downBullet.GetComponent<SpriteRenderer> ().enabled = true;
+			downBullet.transform.SetParent(gameObject.transform.parent.parent.transform);
 
-			leftBullet = Instantiate (enemyBullet, gameObject.transform.position, Quaternion.identity);
+			leftBullet = Instantiate (
+				enemyBullet,
+				gameObject.transform.position,
+				Quaternion.identity
+			);
 			leftBullet.GetComponent<Rigidbody2D> ().velocity = new Vector2(-1.0f, 0.0f);
 			leftBullet.GetComponent<SpriteRenderer> ().enabled = true;
+			leftBullet.transform.SetParent(gameObject.transform.parent.parent.transform);
 
-			rightBullet = Instantiate (enemyBullet, gameObject.transform.position, Quaternion.identity);
+			rightBullet = Instantiate (
+				enemyBullet,
+				gameObject.transform.position,
+				Quaternion.identity
+			);
 			rightBullet.GetComponent<Rigidbody2D> ().velocity = new Vector2(1.0f, 0.0f);
 			rightBullet.GetComponent<SpriteRenderer> ().enabled = true;
+			leftBullet.transform.SetParent(gameObject.transform.parent.parent.transform);
 
 			lastShot = Time.time;
 		}
