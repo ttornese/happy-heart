@@ -5,12 +5,11 @@ using UnityEngine;
 public class EnemyBulletController : MonoBehaviour {
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.CompareTag("Wall"))
-        {
-            Destroy(gameObject);
-        } else if (other.gameObject.CompareTag("Rock"))
-        {
-            Destroy(gameObject);
-        }
+		if (!other.gameObject.CompareTag ("Enemy") &&
+			!other.gameObject.CompareTag ("Turret") &&
+			!other.gameObject.CompareTag ("Enemy Bullet"))
+		{
+			Destroy (gameObject);
+		}
     }
 }

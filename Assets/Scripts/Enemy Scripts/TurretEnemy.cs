@@ -30,7 +30,8 @@ public class TurretEnemy: MonoBehaviour {
 		lastShot = 0.0f;
 	}
 
-	void Update () {
+	void Update ()
+	{
 		ShootBullets ();
         DestroyIfAlive ();
 	}

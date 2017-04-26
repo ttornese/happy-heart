@@ -7,26 +7,26 @@ using UnityEngine;
  * and shoot bullets out in four directions on a cycle.
  */
 public class EnemyController : MonoBehaviour {
-	// Reference to Enemy Bullet prefab
-	public GameObject enemyBullet;
+	private int health;
 
 	// Reference to the player
 	private GameObject player;
+
 	// Reference to RigidBody2D component on this Enemy
 	private Rigidbody2D rigidBody;
-	private int health;
-	// Controls the rate at which the enemy shoots bullets
+
+	// **** Shooting Variables ****
 	private float fireRate;
 	private float lastShot;
-	// Refrences to bullet clones that are created each time
-	// this Enemy shoots
-	private GameObject upBullet;
+	private GameObject bullet;
 	private GameObject downBullet;
 	private GameObject leftBullet;
 	private GameObject rightBullet;
+	private GameObject upBullet;
 
 	void Start ()
 	{
+		bullet = (GameObject)Resources.Load ("Enemy Prefabs/Enemy Bullet");
         player = GameObject.Find("/Player");
 		rigidBody = this.GetComponent<Rigidbody2D> ();
 		health = 2;
@@ -34,16 +34,14 @@ public class EnemyController : MonoBehaviour {
 		lastShot = 0.0f;
 	}
 
-	void Update () {
+	void Update ()
+	{
 		FollowPlayer ();
 		ShootBullets ();
-        DestroyIfAlive ();
+		DestroyIfDead ();
 	}
 
-	/**
-	 * Contains logic to follow the player around the map.
-	 */
-	void FollowPlayer()
+	private void FollowPlayer()
 	{
 		Vector2 playerPosition = player.transform.position;
 		Vector2 enemyPosition = this.transform.position;
@@ -65,12 +63,12 @@ public class EnemyController : MonoBehaviour {
 	 * Uses lastShot and fireRate to determine if this Enemy should shoot bullets.
 	 * The bullets are shot on an interval in all four cardinal directions.
      */
-	void ShootBullets()
+	private void ShootBullets()
 	{
 		if (Time.time > fireRate + lastShot)
 		{
 			upBullet = Instantiate (
-				enemyBullet,
+				bullet,
 				gameObject.transform.position,
 				Quaternion.identity
 			);
@@ -79,7 +77,7 @@ public class EnemyController : MonoBehaviour {
 			upBullet.transform.SetParent(gameObject.transform.parent.parent.transform);
 
             downBullet = Instantiate (
-				enemyBullet,
+				bullet,
 				gameObject.transform.position,
 				Quaternion.identity
 			);
@@ -88,7 +86,7 @@ public class EnemyController : MonoBehaviour {
 			downBullet.transform.SetParent(gameObject.transform.parent.parent.transform);
 
 			leftBullet = Instantiate (
-				enemyBullet,
+				bullet,
 				gameObject.transform.position,
 				Quaternion.identity
 			);
@@ -97,7 +95,7 @@ public class EnemyController : MonoBehaviour {
 			leftBullet.transform.SetParent(gameObject.transform.parent.parent.transform);
 
 			rightBullet = Instantiate (
-				enemyBullet,
+				bullet,
 				gameObject.transform.position,
 				Quaternion.identity
 			);
@@ -109,11 +107,11 @@ public class EnemyController : MonoBehaviour {
 		}
 	}
 
-    void DestroyIfAlive()
+	private void DestroyIfDead()
     {
         if (health == 0)
         {
-            Destroy(this.gameObject);
+            Destroy (gameObject);
         }
     }
 
