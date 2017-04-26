@@ -9,6 +9,8 @@ public class BrokenHeartController : MonoBehaviour
 	private int health;
 	private IEnumerator shootCoroutine;
 
+	private GameObject player;
+
 	public void SetUp()
 	{
 		bullet = (GameObject)Resources.Load ("Enemy Prefabs/Enemy Bullet");
@@ -16,6 +18,8 @@ public class BrokenHeartController : MonoBehaviour
 		health = 10;
 		shootCoroutine = ShootBullets ();
 		StartCoroutine (shootCoroutine);
+
+		player = GameObject.Find ("/Player");
 	}
 
 	void Update ()
@@ -23,6 +27,8 @@ public class BrokenHeartController : MonoBehaviour
 		if (health == 0)
 		{
 			Destroy (gameObject);
+			player.GetComponent<PlayerController> ().DisplayWinMenu ();
+			Time.timeScale = 0;
 		}
 
 		if (transform.localPosition.y >= 2.5f)

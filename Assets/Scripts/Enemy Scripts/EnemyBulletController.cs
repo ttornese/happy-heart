@@ -7,6 +7,7 @@ public class EnemyBulletController : MonoBehaviour {
     {
 		if (!other.gameObject.CompareTag ("Enemy") &&
 			!other.gameObject.CompareTag ("Turret") &&
+			!other.gameObject.CompareTag ("Broken Heart") &&
 			!other.gameObject.CompareTag ("Enemy Bullet"))
 		{
 			Destroy (gameObject);

@@ -19,6 +19,7 @@ public class PlayerController : MonoBehaviour
     private GameObject healthBar;
     private GameObject pauseMenu;
 	private GameObject powerUpDisplay;
+	private GameObject winMenu;
 
 	// **** Player State Variables ****
     private int health; // Health of player
@@ -51,12 +52,14 @@ public class PlayerController : MonoBehaviour
 		bossKeyDisplay = GameObject.Find ("/Canvas/Boss Key Display");
 		bossKeyDisplay.GetComponent<BossKeyDisplayController> ().SetMarkSprite ();
         gameOverMenu = GameObject.Find("/Canvas/Game Over Menu");
-        gameOverMenu.SetActive(false);
+        gameOverMenu.SetActive (false);
         healthBar = GameObject.Find("/Canvas/Health Bar");
         healthBar.GetComponent<HealthDisplayController>().DisplayHealth();
         pauseMenu = GameObject.Find("/Canvas/Pause Menu/");
 		powerUpDisplay = GameObject.Find ("/Canvas/Power Up Display");
-        pauseMenu.SetActive(false);
+        pauseMenu.SetActive (false);
+		winMenu = GameObject.Find ("/Canvas/Win Menu");
+		winMenu.SetActive (false);
 
 		hasBossKey = false;
         health = 4;
@@ -288,5 +291,10 @@ public class PlayerController : MonoBehaviour
 	public void IncrementHealth()
 	{
 		health += 1;
+	}
+
+	public void DisplayWinMenu()
+	{
+		winMenu.SetActive (true);
 	}
 }
